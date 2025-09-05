@@ -697,3 +697,20 @@ body {
     gap: 10px;
     justify-content: flex-end;
 }
+
+.input-error {
+  color: #e53e3e;
+  font-size: 0.85rem;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* estilo do botão quando desabilitado */
+.btn-primary[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+

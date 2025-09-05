@@ -11,7 +11,7 @@ class ListUserCreate {
     }
 }
 
-let listCreated = {};
+export let listCreated = {};
 
 export const listModel = {
     getAllList() {
@@ -19,11 +19,8 @@ export const listModel = {
     },
 
     getListById(id) {
-        for (let key of listCreated) {
-            if (key === id) {
-                return key
-            }
-        }
+        return listCreated[id];
+            
     },
 
     createList(name) {
@@ -38,14 +35,13 @@ export const listModel = {
     updateList(id, newName) {
         listCreated[id].name = newName;
         listCreated[id].updateAt = new Date();
-        console.log(listCreated[id])
     },
 
     changeStatusList(id) {
-        if (listCreated[id] === incompleted) {
-            listCreated[id].status = completed
+        if (listCreated[id] === 'incompleted') {
+            listCreated[id].status = 'completed'
         } else {
-            listCreated[id].status = incompleted
+            listCreated[id].status = 'incompleted'
         };
     },
 

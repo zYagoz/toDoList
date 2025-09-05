@@ -42,7 +42,7 @@
                                     <a href="/lists/<%= list.id %>"><%= list.name %></a>
                                 </h3>
                                 <div class="list-actions">
-                                    <!-- ALTERAÇÃO: botão que abre modal (não submete o form imediatamente) -->
+                                   
                                     <button type="button"
                                             class="btn-icon edit-btn"
                                             data-id="<%= list.id %>"
@@ -51,7 +51,7 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
 
-                                    <!-- Mantive o form de delete exatamente como estava -->
+                                   
                                     <form action="/list/delete/<%= list.id %>" method="POST">
                                         <button class="btn-icon btn-delete" title="Excluir">
                                             <i class="fas fa-trash"></i>
@@ -93,10 +93,10 @@
         </div>
     </div>
 
-    <!-- Partial do modal (arquivo: views/partial/modal.ejs) -->
+    
     <%- include('partials/modal') %>
 
-    <!-- Script do modal (arquivo: public/js/modal.js) -->
+    
     <script src="/js/modal.js"></script>
 </body>
 </html>

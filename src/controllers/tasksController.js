@@ -1,20 +1,45 @@
-import { tasksModel } from "../models/taskModel.js"
+import { tasksModel } from "../models/taskModel.js";
+import { listModel } from "../models/listModel.js";
 
 export const taskController = {
     //GET /list/:id
     show: (req,res) =>{
+        try {
             const id = req.params.id;
-            const list = tasksModel.getAllTask(id)
-            res.render(`list`, {list})
+            const tasklist = tasksModel.getAllTask(id);
+            const list = listModel.getListById(id);
+            if(!list) {
+                console.error(`Lista não existente, voltando para home: ${error}`)
+                return res.redirect('/')
+            }
+            res.render(`list`, {tasklist, list})
+        } catch (error) {
+            console.error(`erro ao tentar acessar: ${error}`)
+            res.redirect('/')
         }
+        },
 
-    //Get /task/create
+    //Get /lists/:id/tasks
+     save: (req, res) => {
+            const id = req.params.id;
+            const {taskName, taskDescription, priority, dueDate} = req.body;
+            const newList = tasksModel.createTask(id,taskName, priority, dueDate, taskDescription)
+            tasksModel.saveTask(newList, id);
+            res.redirect(`/lists/${id}`)
+        },
 
-    //POST /task/create
+    //POST /lists/:id/tasks
 
-    //POST /task/edit/:id
+    //POST /lists/edit/:id
 
-    //POST /task/update/:id
+    //POST /lists/update/:id
 
-    //POST /task/delete/:id
+    //POST /lists/:id/tasks/delete
+    delete: (req, res) =>{
+        const id = req.params.id
+        const taksId = req.params.tasksId;
+        console.log(id,taksId)
+        tasksModel.delete(id, taksId)
+        res.redirect(`/lists/${id}`)
+    }
 }
