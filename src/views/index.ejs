@@ -42,11 +42,16 @@
                                     <a href="/lists/<%= list.id %>"><%= list.name %></a>
                                 </h3>
                                 <div class="list-actions">
-                                    <form action="/list/update/<%= list.id %>" method="POST">
-                                        <button class="btn-icon" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </form>
+                                    <!-- ALTERAÇÃO: botão que abre modal (não submete o form imediatamente) -->
+                                    <button type="button"
+                                            class="btn-icon edit-btn"
+                                            data-id="<%= list.id %>"
+                                            data-name="<%= list.name %>"
+                                            title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <!-- Mantive o form de delete exatamente como estava -->
                                     <form action="/list/delete/<%= list.id %>" method="POST">
                                         <button class="btn-icon btn-delete" title="Excluir">
                                             <i class="fas fa-trash"></i>
@@ -63,7 +68,8 @@
                                 <div class="list-status">
                                     <span class="status-badge <%= list.status === 'completed' ? 'completed' : 'pending' %>">
                                         <i class="fas <%= list.status === 'completed' ? 'fa-check-circle' : 'fa-clock' %>"></i>
-                                        <%= list.status === 'completed' ? 'Concluída' : 'Pendente' %>
+                                        <!-- <%= list.status === 'completed' ? 'Concluída' : 'Pendente' %> -->
+                                        <%= list.status === 'completed' ? 'Concluída' : list.tasks.length > 0 ? 'Pendente' : 'Sem tasks cadastradas'  %>
                                     </span>
                                 </div>
                             </div>
@@ -86,5 +92,11 @@
             <% } %>
         </div>
     </div>
+
+    <!-- Partial do modal (arquivo: views/partial/modal.ejs) -->
+    <%- include('partials/modal') %>
+
+    <!-- Script do modal (arquivo: public/js/modal.js) -->
+    <script src="/js/modal.js"></script>
 </body>
 </html>

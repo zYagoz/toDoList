@@ -27,7 +27,9 @@ export const listController = {
     //POST /list/update/:id
     update: (req, res) => {
         const id = req.params.id;
-        listModel.updateList(id, 'HOLLOW PURPLE')
+        const {name} = req.body;
+        console.log(req.body)
+        listModel.updateList(id, name)
         res.redirect('/')
     },
 
