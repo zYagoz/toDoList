@@ -29,6 +29,13 @@ export const taskController = {
         },
 
     //POST /lists/:id/tasks
+    complete: (req, res) =>{
+        const listId = req.params.id;
+        const taskId = req.params.tasksId;
+
+        tasksModel.complete(listId, taskId);
+        res.redirect(`/lists/${listId}`)
+    },
 
     //POST /lists/edit/:id
 
@@ -38,7 +45,6 @@ export const taskController = {
     delete: (req, res) =>{
         const id = req.params.id
         const taksId = req.params.tasksId;
-        console.log(id,taksId)
         tasksModel.delete(id, taksId)
         res.redirect(`/lists/${id}`)
     }

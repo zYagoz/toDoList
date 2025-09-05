@@ -39,6 +39,16 @@ export const tasksModel = {
         return newTask
     },
 
+    complete(idList,idTask){
+        const listaAlvo = listCreated[idList].tasks
+        for(let task of listaAlvo){
+            if(task.id === idTask){
+                task.status === 'incompleted' ? task.status = 'completed' : task.status = 'incompleted';
+                return task
+            }
+        }
+    },
+
     delete(idList, idTask){
         const listaAlvo = listCreated[idList].tasks
         console.log(idTask)
