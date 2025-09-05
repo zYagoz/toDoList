@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Listas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-list"></i> Minhas Listas de Tarefas</h1>
+            <p class="subtitle">Organize suas tarefas de forma simples e eficiente</p>
+        </header>
+
+        <div class="create-section">
+            <form class="create-form" action="/lists" method="POST">
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Nome da nova lista" required>
+                    <button type="submit" class="btn-create">
+                        <i class="fas fa-plus"></i> Criar Lista
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="lists-container">
+            <% if (Object.keys(lists).length === 0) { %>
+                <div class="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Nenhuma lista criada ainda</h3>
+                    <p>Crie sua primeira lista para começar a organizar suas tarefas</p>
+                </div>
+            <% } else { %>
+                <div class="lists-grid">
+                    <% for (let listId in lists) { %>
+                        <% const list = lists[listId]; %>
+                        <div class="list-card <%= list.status === 'completed' ? 'completed' : '' %>">
+                            <div class="list-header">
+                                <h3 class="list-name">
+                                    <a href="/lists/<%= list.id %>"><%= list.name %></a>
+                                </h3>
+                                <div class="list-actions">
+                                    <button class="btn-icon" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="list-info">
+                                <div class="task-count">
+                                    <i class="fas fa-tasks"></i>
+                                    <span><%= list.tasks ? list.tasks.length : 0 %> tarefas</span>
+                                </div>
+                                <div class="list-status">
+                                    <span class="status-badge <%= list.status === 'completed' ? 'completed' : 'pending' %>">
+                                        <i class="fas <%= list.status === 'completed' ? 'fa-check-circle' : 'fa-clock' %>"></i>
+                                        <%= list.status === 'completed' ? 'Concluída' : 'Pendente' %>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="list-dates">
+                                <small class="created-date">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    Criada em: <%= new Date(list.createdAt).toLocaleDateString('pt-BR') %>
+                                </small>
+                                <% if (list.updateAt && list.updateAt !== list.createdAt) { %>
+                                    <small class="updated-date">
+                                        <i class="fas fa-calendar-edit"></i>
+                                        Atualizada em: <%= new Date(list.updateAt).toLocaleDateString('pt-BR') %>
+                                    </small>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
