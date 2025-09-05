@@ -15,7 +15,7 @@
         </header>
 
         <div class="create-section">
-            <form class="create-form" action="/lists" method="POST">
+            <form class="create-form" action="/list/create" method="POST">
                 <div class="input-group">
                     <input type="text" name="name" placeholder="Nome da nova lista" required>
                     <button type="submit" class="btn-create">
@@ -42,12 +42,16 @@
                                     <a href="/lists/<%= list.id %>"><%= list.name %></a>
                                 </h3>
                                 <div class="list-actions">
-                                    <button class="btn-icon" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon btn-delete" title="Excluir">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <form action="/list/update/<%= list.id %>" method="POST">
+                                        <button class="btn-icon" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </form>
+                                    <form action="/list/delete/<%= list.id %>" method="POST">
+                                        <button class="btn-icon btn-delete" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                             
@@ -82,7 +86,5 @@
             <% } %>
         </div>
     </div>
-
-    <script src="/js/script.js"></script>
 </body>
 </html>
