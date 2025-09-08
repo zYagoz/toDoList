@@ -740,3 +740,99 @@ body {
 }
 
 
+/* Container do modal (o layout base usa classes já presentes no style.css) */
+#editTaskModal.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* quando ativo */
+#editTaskModal.modal.active {
+  display: flex;
+}
+
+/* caixa interna (conteúdo) */
+#editTaskModal .modal-content {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* título */
+#editTaskModal .modal-content h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #4a5568;
+  text-align: left;
+}
+
+/* inputs/textarea */
+.input-with-ghost { position: relative; margin-top: 12px; }
+.input-with-ghost input,
+.input-with-ghost textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.95);
+  font-size: 1rem;
+  color: #2d3748;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.input-with-ghost textarea { min-height: 80px; resize: vertical; }
+
+/* form-row inputs (prioridade e data) */
+#editTaskModal .form-row { display: flex; gap: 12px; margin-top: 12px; }
+#editTaskModal .priority-select,
+#editTaskModal .date-input {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  background: rgba(255,255,255,0.95);
+}
+
+/* ações */
+#editTaskModal .modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* botão salvar desabilitado */
+#saveTaskBtn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* responsividade */
+@media (max-width: 480px) {
+  #editTaskModal .modal-content { padding: 18px; max-width: 95%; }
+  #editTaskModal .form-row { flex-direction: column; }
+}
+
+#taskDescInput {
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}

@@ -1,0 +1,29 @@
+<div id="editTaskModal" class="modal" aria-hidden="true" role="dialog" style="display:none;">
+  <div class="modal-content" role="document" aria-labelledby="editTaskTitle">
+    <h3 id="editTaskTitle"><i class="fas fa-edit"></i> Editar Tarefa</h3>
+
+    <form id="editTaskForm" method="POST" action="">
+      <!-- Nome -->
+      <input id="taskNameInput" name="name" type="text" placeholder="" autocomplete="off" />
+
+      <!-- Descrição -->
+      <input id="taskDescInput" name="description" type="text" placeholder="" autocomplete="off" />
+
+      <!-- Prioridade + Data -->
+      <div class="form-row" style="margin-top:8px;">
+        <select id="taskPriorityInput" name="priority" class="priority-select">
+          <option value="low">Baixa</option>
+          <option value="medium">Média</option>
+          <option value="high">Alta</option>
+        </select>
+
+        <input id="taskDueInput" name="dueDate" type="date" class="date-input" placeholder="" />
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" id="saveTaskBtn" class="btn-primary" disabled>Salvar</button>
+        <button type="button" id="closeTaskModal" class="btn-secondary">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
