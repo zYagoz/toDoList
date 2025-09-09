@@ -66,7 +66,6 @@ export const tasksModel = {
 
         delete (idList, idTask){
             const listaAlvo = listCreated[idList].tasks
-            console.log(idTask)
             if (listTaskCreated[idTask]) {
                 delete listTaskCreated[idTask];
             }

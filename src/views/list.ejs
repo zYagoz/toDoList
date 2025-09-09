@@ -39,7 +39,7 @@
 
                 <div class="list-actions-bar task-actions">
                     <button class="btn-primary edit-btn" id="editListBtn" data-id="<%= list.id %>"
-                        data-name="<%= list.name %>" title="Editar">>
+                        data-name="<%= list.name %>" title="Editar">
                         <i class="fas fa-edit"></i> Editar Lista
                     </button>
                     <form action="/list/status/<%= list.id %>" method="POST">
@@ -56,7 +56,7 @@
                         </button>
                     </form>
                 </div>
-                <% } %>
+            <% } %>
         </header>
 
         <% if (list) { %>
@@ -81,7 +81,6 @@
                 </form>
             </div>
 
-
             <div class="tasks-container">
                 <% if (!list.tasks || list.tasks.length===0) { %>
                     <div class="empty-tasks">
@@ -89,110 +88,111 @@
                         <h3>Nenhuma tarefa adicionada</h3>
                         <p>Adicione sua primeira tarefa usando o formulário acima</p>
                     </div>
-                    <% } else { %>
-                        <div class="tasks-header">
-                            <h2>Tarefas (<%= list.tasks.length %>)</h2>
-                            <div class="tasks-filters">
-                                <button class="filter-btn active" data-filter="none">
-                                    <i class="fas fa-list"></i> Todas
-                                </button>
-                                <button class="filter-btn" data-filter="incompleted">
-                                    <i class="fas fa-clock"></i> Pendentes
-                                </button>
-                                <button class="filter-btn" data-filter="completed">
-                                    <i class="fas fa-check"></i> Concluídas
-                                </button>
+                <% } else { %>
+                    <div class="tasks-header">
+                        <h2>Tarefas (<%= list.tasks.length %>)</h2>
+                        <div class="tasks-filters">
+                            <button class="filter-btn active" data-filter="none">
+                                <i class="fas fa-list"></i> Todas
+                            </button>
+                            <button class="filter-btn" data-filter="incompleted">
+                                <i class="fas fa-clock"></i> Pendentes
+                            </button>
+                            <button class="filter-btn" data-filter="completed">
+                                <i class="fas fa-check"></i> Concluídas
+                            </button>
+                        </div>
+                    </div>
+
+                    <% 
+                        const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+                        list.tasks.forEach(function(task) { 
+                            const isOverdue = task.dueDate && task.dueDate < today && task.status !== 'completed';
+                    %>
+                    <div class="task-card <%= task.status %> priority-<%= task.priority %> <%= isOverdue ? 'overdue' : '' %>"
+                        data-task-id="<%= task.id %>">
+
+                        <div class="task-checkbox">
+                            <input type="checkbox" id="task-<%= task.id %>" class="task-complete-checkbox"
+                                data-task-id="<%= task.id %>" <%=task.status==='completed' ? 'checked' : '' %>>
+                            <label for="task-<%= task.id %>"></label>
+                        </div>
+
+                        <div class="task-content">
+                            <h4 class="task-name">
+                                <%= task.name %>
+                            </h4>
+                            <% if (task.description) { %>
+                                <p class="task-description">
+                                    <%= task.description %>
+                                </p>
+                            <% } %>
+                            <div class="task-meta">
+                                <span class="priority-badge priority-<%= task.priority %>">
+                                    <i class="fas fa-flag"></i>
+                                    <%= task.priority==='high' ? 'Alta' : task.priority==='medium' ? 'Média' : 'Baixa' %>
+                                </span>
+                                <% if (task.dueDate) { %>
+                                    <span class="due-date"><i class="fas fa-calendar-alt"></i>
+                                        <%= task.dueDate.split('-').reverse().join('/') %>
+                                    </span>
+                                <% } %>
+                                <span class="created-date"><i class="fas fa-clock"></i>
+                                    <%= new Date(task.createdAt).toLocaleDateString('pt-BR') %>
+                                </span>
                             </div>
                         </div>
 
-                        <div class="tasks-list">
-                            <% list.tasks.forEach(function(task) { %>
-                                <div class="task-card <%= task.status %> priority-<%= task.priority %>"
-                                    data-task-id="<%= task.id %>">
+                        <!-- Botão de concluir -->
+                        <form action="/lists/<%= list.id %>/tasks/complete/<%= task.id %>" method="POST"
+                            class="task-actions">
+                            <button type="submit" class="btn-icon btn-complete" title="Concluir Tarefa">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                        </form>
 
-                                    <div class="task-checkbox">
-                                        <input type="checkbox" id="task-<%= task.id %>" class="task-complete-checkbox"
-                                            data-task-id="<%= task.id %>" <%=task.status==='completed' ? 'checked' : ''
-                                            %>>
-                                        <label for="task-<%= task.id %>"></label>
-                                    </div>
+                        <!-- Botão de editar e excluir -->
+                        <div class="task-actions">
+                            <button type="button" class="btn-icon btn-edit" title="Editar"
+                                data-task-id="<%= task.id %>" data-task-name="<%= task.name %>"
+                                data-task-desc="<%= task.description ? task.description : '' %>"
+                                data-task-priority="<%= task.priority || 'medium' %>"
+                                data-task-due="<%= task.dueDate ? (task.dueDate.includes('/') ? task.dueDate.split('/').reverse().join('-') : task.dueDate) : '' %>">
+                                <i class="fas fa-edit"></i>
+                            </button>
 
-                                    <div class="task-content">
-                                        <h4 class="task-name">
-                                            <%= task.name %>
-                                        </h4>
-                                        <% if (task.description) { %>
-                                            <p class="task-description">
-                                                <%= task.description %>
-                                            </p>
-                                            <% } %>
-                                                <div class="task-meta">
-                                                    <span class="priority-badge priority-<%= task.priority %>">
-                                                        <i class="fas fa-flag"></i>
-                                                        <%= task.priority==='high' ? 'Alta' : task.priority==='medium'
-                                                            ? 'Média' : 'Baixa' %>
-                                                    </span>
-                                                    <% if (task.dueDate) { %>
-                                                        <span class="due-date"><i class="fas fa-calendar-alt"></i>
-                                                            <%= task.dueDate.split('-').reverse().join('/') %>
-                                                        </span>
-                                                        <% } %>
-                                                            <span class="created-date"><i class="fas fa-clock"></i>
-                                                                <%= new Date(task.createdAt).toLocaleDateString('pt-BR')
-                                                                    %>
-                                                            </span>
-                                                </div>
-                                    </div>
-
-
-                                    <!-- Botão de concluir -->
-                                    <form action="/lists/<%= list.id %>/tasks/complete/<%= task.id %>" method="POST"
-                                        class="task-actions">
-                                        <button type="submit" class="btn-icon btn-complete" title="Concluir Tarefa">
-                                            <i class="fas fa-check-circle"></i>
-                                        </button>
-                                    </form>
-
-
-                                    <!-- Botão de editar -->
-                                    <div class="task-actions">
-                                        <button type="button" class="btn-icon btn-edit" title="Editar"
-                                            data-task-id="<%= task.id %>" data-task-name="<%= task.name %>"
-                                            data-task-desc="<%= task.description ? task.description : '' %>"
-                                            data-task-priority="<%= task.priority || 'medium' %>"
-                                            data-task-due="<%= task.dueDate ? (task.dueDate.includes('/') ? task.dueDate.split('/').reverse().join('-') : task.dueDate) : '' %>">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-
-                                        <!-- Botão de excluir -->
-                                        <form action="/lists/<%= list.id %>/tasks/delete/<%= task.id %>" method="POST">
-                                            <button class="btn-icon btn-delete" title="Excluir"><i
-                                                    class="fas fa-trash"></i></button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <% }); %>
+                            <form action="/lists/<%= list.id %>/tasks/delete/<%= task.id %>" method="POST">
+                                <button class="btn-icon btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
+
+                        <!-- Badge de atraso -->
+                        <% if(isOverdue) { %>
+                            <span class="task-overdue-badge">Atrasada</span>
                         <% } %>
-            </div>
-            <% } else { %>
-                <div class="error-state">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h2>Lista não encontrada</h2>
-                    <p>A lista que você está procurando não existe ou foi removida.</p>
-                    <a href="/" class="btn-primary">
-                        <i class="fas fa-home"></i> Voltar ao Início
-                    </a>
-                </div>
+
+                    </div>
+                    <% }); %>
                 <% } %>
+            </div>
+        <% } else { %>
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Lista não encontrada</h2>
+                <p>A lista que você está procurando não existe ou foi removida.</p>
+                <a href="/" class="btn-primary">
+                    <i class="fas fa-home"></i> Voltar ao Início
+                </a>
+            </div>
+        <% } %>
     </div>
 
     <%- include('partials/modal') %>
-        <%- include('partials/task-modal') %>
+    <%- include('partials/task-modal') %>
 
-            <script src="/js/modal.js"></script>
-            <script src="/js/task-modal.js"></script>
-            <script src="/js/filter.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/task-modal.js"></script>
+    <script src="/js/filter.js"></script>
 
 </body>
 </html>

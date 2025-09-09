@@ -407,6 +407,9 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     margin-top: 30px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .tasks-header {
@@ -876,3 +879,23 @@ body {
 .task-card.hidden {
     display: none !important;
 };
+
+.task-card {
+    position: relative; /* necessário para posicionamento absoluto do badge */
+}
+
+.task-overdue-badge {
+    position: absolute;
+    right: 15px; /* distância da borda direita */
+    bottom: 15px; /* distância da parte inferior */
+    background-color: #e53e3e; /* vermelho compatível */
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.task-card.overdue {
+    border-left: 4px solid #e53e3e; /* destaque visual opcional */
+}

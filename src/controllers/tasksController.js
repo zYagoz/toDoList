@@ -42,7 +42,6 @@ export const taskController = {
         const listId = req.params.id;
         const taskId = req.params.tasksId;
         const { name, description, priority, dueDate } = req.body
-        console.log(dueDate)
         tasksModel.updateTask(listId,taskId, name, description, priority, dueDate);
         res.redirect(`/lists/${listId}`)
     },
