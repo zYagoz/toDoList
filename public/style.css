@@ -872,3 +872,7 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(56, 161, 105, 0.3);
 }
+
+.task-card.hidden {
+    display: none !important;
+};
