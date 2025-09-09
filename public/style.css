@@ -836,3 +836,26 @@ body {
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.9);
 }
+
+#editTaskModal .modal-content textarea#taskDescInput {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.95);
+  font-size: 1rem;
+  color: #2d3748;
+  min-height: 48px; /* ajusta altura para ficar similar ao input */
+  line-height: 1.4;
+  resize: vertical; /* mantém possibilidade de redimensionar vertical */
+  box-sizing: border-box;
+  margin-top: 12px;
+}
+
+/* foco consistente */
+#editTaskModal .modal-content textarea#taskDescInput:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.08);
+  background: #fff;
+}

@@ -23,8 +23,6 @@ export const listController = {
         res.redirect('/')
     },
 
-    //POST /list/edit/:id
-
     //POST /list/update/:id
     update: (req, res) => {
         const id = req.params.id;

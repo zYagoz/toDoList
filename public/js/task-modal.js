@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('editTaskForm');
 
   const nameInput = document.getElementById('taskNameInput');
-  const descInput = document.getElementById('taskDescInput');
+  const descInput = document.getElementById('taskDescInput'); // textarea
   const priorityInput = document.getElementById('taskPriorityInput');
   const dueInput = document.getElementById('taskDueInput');
   const saveBtn = document.getElementById('saveTaskBtn');
 
-  const listId = document.body.dataset.listId;
+  const listId = document.body.dataset.listId || '';
 
   let originalName = '';
   let originalDesc = '';
@@ -19,39 +19,75 @@ document.addEventListener('DOMContentLoaded', function () {
   let originalDue = '';
 
   function toIsoDate(value) {
-    if (!value) return '';
-    value = value.toString().trim();
-    if (/^\d{4}-\d{2}-\d{2}/.test(value)) return value.slice(0,10);
-    if (value.includes('/')) {
-      const [d,m,y] = value.split('/');
-      return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+    if (value === undefined || value === null) return '';
+    let v = String(value).trim();
+    if (!v) return '';
+    const isoMatch = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    let dm = v.match(/^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})$/);
+    if (dm) {
+      let d = dm[1].padStart(2,'0'), m = dm[2].padStart(2,'0'), y = dm[3];
+      if (y.length === 2) y = (parseInt(y,10) > 50 ? '19' + y : '20' + y);
+      return `${y}-${m}-${d}`;
     }
-    const dt = new Date(value);
-    return !isNaN(dt) ? dt.toISOString().slice(0,10) : '';
+    if (/^\d{10,13}$/.test(v)) {
+      const ts = parseInt(v,10);
+      const dt = new Date(ts);
+      if (!isNaN(dt)) return dt.toISOString().slice(0,10);
+    }
+    const dt = new Date(v);
+    if (!isNaN(dt)) return dt.toISOString().slice(0,10);
+    const nums = v.match(/\d+/g);
+    if (nums && nums.length >= 3) {
+      let yearIdx = nums.findIndex(n => n.length === 4);
+      if (yearIdx !== -1) {
+        const y = nums[yearIdx];
+        const others = nums.filter((_, i) => i !== yearIdx);
+        const d = others[0].padStart(2,'0');
+        const m = others[1] ? others[1].padStart(2,'0') : '01';
+        return `${y}-${m}-${d}`;
+      } else {
+        let [a,b,c] = nums;
+        if (c) {
+          let d = a.padStart(2,'0'), m = b.padStart(2,'0'), y = c.length === 2 ? ('20' + c) : c;
+          return `${y}-${m}-${d}`;
+        }
+      }
+    }
+    return '';
   }
 
   function openModal() {
+    if (!modal) return;
     modal.style.display = 'flex';
     modal.classList.add('active');
-    setTimeout(() => nameInput.focus(), 120);
+    setTimeout(() => { if (nameInput) nameInput.focus(); }, 120);
   }
   function closeModal() {
+    if (!modal) return;
     modal.style.display = 'none';
     modal.classList.remove('active');
   }
 
   function validateName() {
+    if (!saveBtn || !nameInput) return;
     const cur = nameInput.value.trim();
     const ok = (cur === '') || (cur.length >= 3);
     saveBtn.disabled = !ok;
   }
 
-  form.addEventListener('submit', function () {
-    if (nameInput.value.trim() === '') nameInput.value = originalName || '';
-    if (descInput.value.trim() === '') descInput.value = originalDesc || '';
-    if (!priorityInput.value) priorityInput.value = originalPriority || 'medium';
-    if (!dueInput.value) dueInput.value = toIsoDate(originalDue) || '';
-  });
+  if (form) {
+    form.addEventListener('submit', function () {
+      if (nameInput && nameInput.value.trim() === '') nameInput.value = originalName || '';
+      // aqui mantemos a lógica: se textarea vazio, reaplica originalDesc
+      if (descInput && descInput.value.trim() === '') descInput.value = originalDesc || '';
+      if (priorityInput && !priorityInput.value) priorityInput.value = originalPriority || 'medium';
+      if (dueInput && !dueInput.value) {
+        const iso = toIsoDate(originalDue);
+        if (iso) dueInput.value = iso;
+      }
+    });
+  }
 
   editButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -59,36 +95,55 @@ document.addEventListener('DOMContentLoaded', function () {
       const taskName = button.dataset.taskName || '';
       const taskDesc = button.dataset.taskDesc || '';
       const taskPriority = button.dataset.taskPriority || 'medium';
-      const taskDue = button.dataset.taskDue || '';
+      let taskDue = (button.dataset.taskDue || '').toString().trim();
 
-      // guarda originais
+      if (!taskDue) {
+        const card = button.closest('.task-card');
+        if (card) taskDue = (card.dataset.taskDue || card.getAttribute('data-task-due') || '').toString().trim();
+      }
+      if (!taskDue) {
+        const card = button.closest('.task-card');
+        const dueEl = card ? card.querySelector('.due-date') : null;
+        if (dueEl) {
+          const raw = (dueEl.textContent || dueEl.innerText || '').toString().trim();
+          taskDue = raw.replace(/[^\d\/\-\.\s]/g, '').trim();
+        }
+      }
+
       originalName = taskName;
       originalDesc = taskDesc;
       originalPriority = taskPriority;
       originalDue = taskDue;
 
-      // define placeholders
-      nameInput.placeholder = taskName || 'Nome da tarefa';
-      descInput.placeholder = taskDesc || 'Descrição da tarefa';
-      dueInput.placeholder = toIsoDate(taskDue);
+      // coloca value da data em ISO (para input[type=date] exibir)
+      if (dueInput) {
+        const isoDue = toIsoDate(taskDue);
+        dueInput.value = isoDue || '';
+      }
 
-      // limpa campos para permitir digitar novos valores
-      nameInput.value = '';
-      descInput.value = '';
-      priorityInput.value = taskPriority || 'medium';
-    //   dueInput.value = ''; // usuário só altera se quiser
+      // placeholders: mantemos placeholder preenchido com valores atuais
+      if (nameInput) {
+        nameInput.placeholder = taskName || 'Nome da tarefa';
+        nameInput.value = '';
+      }
+      if (descInput) {
+        descInput.placeholder = taskDesc || 'Descrição da tarefa';
+        // NÃO atribuímos descInput.value = originalDesc aqui — manter vazio para mostrar placeholder
+        descInput.value = taskDesc;
+      }
 
-      if (descInput.value.trim() === '') descInput.value = originalDesc || '';
+      if (priorityInput) priorityInput.value = taskPriority || 'medium';
 
-      form.action = `/lists/${listId}/tasks/update/${taskId}`;
+      if (form && listId && taskId) form.action = `/lists/${listId}/tasks/update/${taskId}`;
+
       validateName();
       openModal();
     });
   });
 
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') closeModal(); });
 
-  nameInput.addEventListener('input', validateName);
+  if (nameInput) nameInput.addEventListener('input', validateName);
 });

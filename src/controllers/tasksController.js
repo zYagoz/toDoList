@@ -32,16 +32,21 @@ export const taskController = {
     complete: (req, res) =>{
         const listId = req.params.id;
         const taskId = req.params.tasksId;
-
+        
         tasksModel.complete(listId, taskId);
         res.redirect(`/lists/${listId}`)
     },
+    
+    //POST /lists/:id/tasks/update/:taskid
+    update: (req, res) =>{
+        const listId = req.params.id;
+        const taskId = req.params.tasksId;
+        const { name, description, priority, duedate } = req.body
+        tasksModel.updateTask(listId,taskId, name, description, priority, duedate);
+        res.redirect(`/lists/${listId}`)
+    },
 
-    //POST /lists/edit/:id
-
-    //POST /lists/update/:id
-
-    //POST /lists/:id/tasks/delete
+    //POST /lists/:id/tasks/delete/:taskid
     delete: (req, res) =>{
         const id = req.params.id
         const taksId = req.params.tasksId;

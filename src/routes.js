@@ -16,6 +16,7 @@ router.get('/lists/:id', taskController.show)
 router.post('/lists/:id/tasks', taskController.save)
 router.post('/lists/:id/tasks/delete/:tasksId', taskController.delete)
 router.post('/lists/:id/tasks/complete/:tasksId', taskController.complete)
+router.post('/lists/:id/tasks/update/:tasksId', taskController.update)
 
 
 
