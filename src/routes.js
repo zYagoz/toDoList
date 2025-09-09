@@ -9,6 +9,7 @@ router.get('/', listController.index);
 router.post('/list/create', listController.save)
 router.post('/list/delete/:id', listController.delete)
 router.post('/list/update/:id', listController.update)
+router.post('/list/status/:id', listController.updateStatus)
 
 //Rotas das tasks   
 router.get('/tasks', taskController.show)

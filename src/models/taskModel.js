@@ -30,8 +30,6 @@ export const tasksModel = {
         if (!listInput) return null;
         if(!dueDate || dueDate === '') dueDate = format(new Date(), 'yyyy-MM-dd');
         const newTask = new taskUserCreate(name, priority, dueDate, taskDescription)
-        console.log(`aqui a due data: ${dueDate}`)
-        console.log(newTask)
         return newTask;
     },
 
@@ -62,7 +60,6 @@ export const tasksModel = {
                 newPriority !== '' ? task.priority = newPriority : null;
                 newDate !== '' ? task.dueDate = newDate : null;
                 task.updateAt = new Date();
-
                 return task
             }
         }},

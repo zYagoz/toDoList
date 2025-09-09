@@ -26,12 +26,24 @@ export const listController = {
     //POST /list/update/:id
     update: (req, res) => {
         const id = req.params.id;
+        const referer = req.get('Referer');
         const { name } = req.body;
-        if(!name || name.length < 3){
+        if (!name || name.length < 3) {
             return res.status(400).send('O nome precisa ter pelo menos 4 caracteres')
         }
-        listModel.updateList(id, name)
-        res.redirect('/')
+        listModel.updateList(id, name);
+        referer.endsWith('/') ? res.redirect('/') : res.redirect(`/lists/${id}`);
+    },
+    
+    //POST /list/status/:id
+    updateStatus: (req,res) =>{
+        const id = req.params.id;
+        const referer = req.get('Referer');
+        
+        listModel.changeStatusList(id);
+        referer.endsWith('/') ? res.redirect('/') : res.redirect(`/lists/${id}`);
+
+        
     },
 
     //POST /list/delete/:id

@@ -38,10 +38,14 @@ export const listModel = {
     },
 
     changeStatusList(id) {
-        if (listCreated[id] === 'incompleted') {
-            listCreated[id].status = 'completed'
+        const selectList = listCreated[id];
+        if (selectList.status === 'incompleted') {
+            selectList.status = 'completed';
+            selectList.updateAt = new Date();
+            
         } else {
-            listCreated[id].status = 'incompleted'
+            selectList.status = 'incompleted';
+            selectList.updateAt = new Date();
         };
     },
 

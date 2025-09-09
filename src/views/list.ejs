@@ -38,13 +38,18 @@
                 </div>
 
                 <div class="list-actions-bar task-actions">
-                    <button class="btn-primary" id="editListBtn">
+                    <button class="btn-primary edit-btn" id="editListBtn" data-id="<%= list.id %>"
+                        data-name="<%= list.name %>" title="Editar">>
                         <i class="fas fa-edit"></i> Editar Lista
                     </button>
-                    <button class="btn-secondary" id="toggleStatusBtn">
-                        <i class="fas <%= list.status === 'completed' ? 'fa-undo' : 'fa-check' %>"></i>
-                        <%= list.status==='completed' ? 'Marcar como Pendente' : 'Marcar como Concluída' %>
-                    </button>
+                    <form action="/list/status/<%= list.id %>" method="POST">
+                        <button class="btn-secondary <%= list.status === 'completed' ? 'btn-completed' : '' %>"
+                            id="toggleStatusBtn">
+                            <i class="fas <%= list.status === 'completed' ? 'fa-undo' : 'fa-check' %>"></i>
+                            <%= list.status==='completed' ? 'Concluída' : 'Concluir' %>
+                        </button>
+                    </form>
+
                     <form action="/list/delete/<%= list.id %>" method="POST">
                         <button class="btn-danger" id="deleteListBtn">
                             <i class="fas fa-trash"></i> Excluir Lista
@@ -88,10 +93,10 @@
                         <div class="tasks-header">
                             <h2>Tarefas (<%= list.tasks.length %>)</h2>
                             <div class="tasks-filters">
-                                <button class="filter-btn active" data-filter="all">
+                                <button class="filter-btn active" data-filter="none">
                                     <i class="fas fa-list"></i> Todas
                                 </button>
-                                <button class="filter-btn" data-filter="pending">
+                                <button class="filter-btn" data-filter="incompleted">
                                     <i class="fas fa-clock"></i> Pendentes
                                 </button>
                                 <button class="filter-btn" data-filter="completed">
@@ -182,11 +187,11 @@
                 <% } %>
     </div>
 
-    <!-- <%- include('partials/modal') %> -->
-    <%- include('partials/task-modal') %>
+    <%- include('partials/modal') %>
+        <%- include('partials/task-modal') %>
 
-        <!-- <script src="/js/modal.js"></script> -->
-        <script src="/js/task-modal.js"></script>
+            <script src="/js/modal.js"></script>
+            <script src="/js/task-modal.js"></script>
 </body>
 
 </html>

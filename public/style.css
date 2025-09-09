@@ -859,3 +859,16 @@ body {
   box-shadow: 0 0 0 3px rgba(102,126,234,0.08);
   background: #fff;
 }
+
+.btn-completed {
+    background-color: #48bb78; /* verde */
+    color: white; /* texto contrastante */
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-completed:hover {
+    background-color: #38a169; /* verde mais escuro no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 161, 105, 0.3);
+}
